@@ -39,7 +39,7 @@ The assessment followed a structured web application testing methodology:
 
 ---
 
-# 1. Target Setup
+# Target Setup
 
 Purpose:
 To deploy and access the vulnerable web application in a local lab environment.
@@ -48,26 +48,33 @@ The OWASP Juice Shop application was hosted locally using Docker and accessed th
 
 ### Output
 
-![Juice Shop Running](screenshots/01-juice-shop-running.png)
+![Juice Shop Running](screenshots_juiceshop_running.png)
 
 ---
 
-# 2. Manual Authentication Testing
+# Manual Input Testing
 
 Purpose:
-To create a valid user account and verify successful authentication before automated testing.
+To manually test authentication input fields for abnormal application behavior and possible SQL Injection indicators.
 
-A user account was registered and successfully authenticated within the application.
+Special characters such as single quotes were inserted into authentication fields to observe application responses and error handling behavior.
+
+Test Payload Used
+```
+'
+```
+### Observed Behavior
+
+The application generated abnormal responses during invalid input testing, indicating improper backend handling of user supplied data.
 
 ### Output
+![Manual Testing](screenshots_manual_testing.png)
 
-![Login Page](screenshots/02-login-page.png)
-
-![Successful Login](screenshots/03-manual-login-test.png)
+![Login Authentic](screenshots_login_Authentic.png)
 
 ---
 
-# 3. Browser Network Request Analysis
+# Browser Network Request Analysis
 
 Purpose:
 To intercept and inspect authentication requests sent by the application backend API.
@@ -76,11 +83,11 @@ Firefox Developer Tools were used to monitor live network traffic generated duri
 
 ### Output
 
-![Network Analysis](screenshots/04-browser-network-analysis.png)
+![Network Analysis](screenshots_browser_network_analysis.png)
 
 ---
 
-# 4. JSON Request Capture
+# JSON Request Capture
 
 Purpose:
 To identify request parameters and extract the authentication request for automated testing.
@@ -98,11 +105,11 @@ The captured login request contained JSON-formatted authentication parameters su
 
 ### Output
 
-![JSON Request Capture](screenshots/05-json-request-capture.png)
+![JSON Request Capture](screenshots_json_request_capture.png)
 
 ---
 
-# 5. SQLMap Request File Preparation
+# SQLMap Request File Preparation
 
 Purpose:
 To prepare a reusable HTTP request file for SQL Injection testing.
@@ -127,11 +134,13 @@ Content-Type: application/json
 
 ### Output
 
-![Request File](screenshots/06-sqlmap-request-file.png)
+![Request File](screenshots_sqlmap_request_file.png)
+
+![Request File](screenshots_sqlmap_display_file.png)
 
 ---
 
-# 6. Initial SQLMap Connection Testing
+# Initial SQLMap Connection Testing
 
 Purpose:
 To verify communication between SQLMap and the target application.
@@ -145,12 +154,13 @@ sqlmap -r request.txt --batch --ignore-code=401
 ```
 
 ### Output
+![Connection Test](screenshots_sqlmap_connection.png)
 
-![Connection Test](screenshots/07-sqlmap-connection-test.png)
+![Connection Test](screenshots_sqlmap_connection_test.png)
 
 ---
 
-# 7. SQL Injection Parameter Testing
+# SQL Injection Parameter Testing
 
 Purpose:
 To test authentication parameters for possible SQL Injection vulnerabilities.
@@ -159,11 +169,11 @@ SQLMap performed multiple injection techniques against the JSON email and passwo
 
 ### Output
 
-![Parameter Testing](screenshots/08-sqlmap-parameter-testing.png)
+![Parameter Testing](screenshots_sqlmap_parameter_testing.png)
 
 ---
 
-# 8. Boolean-Based SQL Injection Detection
+# Boolean-Based SQL Injection Detection
 
 Purpose:
 To identify potential blind SQL Injection behavior.
@@ -178,30 +188,12 @@ SQLMap reported possible boolean-based SQL Injection indicators during testing o
 
 ### Output
 
-![Boolean-Based Detection](screenshots/09-sqlmap-boolean-based-detection.png)
+![Boolean-Based Detection](screenshots_sqlmap_boolean_based_detection.png)
+
 
 ---
 
-# 9. Backend Database Fingerprinting
-
-Purpose:
-To identify the backend database management system used by the application.
-
-SQLMap heuristically identified the possible backend DBMS as SQLite.
-
-### Observed Indicator
-
-```plaintext id="’wini117"
-back-end DBMS could be 'SQLite'
-```
-
-### Output
-
-![SQLite Fingerprint](screenshots/10-sqlite-dbms-fingerprint.png)
-
----
-
-# 10. Server Response & Stability Analysis
+# Server Response & Stability Analysis
 
 Purpose:
 To observe how the application responded to advanced SQL Injection payloads.
@@ -216,7 +208,7 @@ During time-based and stacked query testing, the application generated multiple 
 
 ### Output
 
-![Server Errors](screenshots/11-server-error-responses.png)
+![Server Errors](screenshots_server_error_responses.png)
 
 ---
 
@@ -229,7 +221,7 @@ Although SQLMap detected possible SQL Injection indicators and backend database 
 
 ### Output
 
-![Final Results](screenshots/12-sqlmap-final-results.png)
+![Final Results](screenshots_sqlmap_final_results.png)
 
 ---
 
